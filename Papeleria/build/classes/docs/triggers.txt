@@ -1,0 +1,138 @@
+DELIMITER //
+CREATE TRIGGER auditoria AFTER INSERT ON marca
+FOR EACH ROW
+BEGIN
+INSERT INTO
+bitacora(user ,fecha, tipo , dato, tabla, bd)
+Values(USER() ,NOW(),'INSERT',NEW.nombre,'marca',DATABASE());
+END;
+//
+DELIMITER ;
+
+
+
+DELIMITER //
+CREATE TRIGGER auditoria1 AFTER DELETE ON marca
+FOR EACH ROW
+BEGIN
+INSERT INTO
+bitacora(user ,fecha, tipo , dato, tabla, bd)
+Values(USER() ,NOW(),'DELETE',OLD.nombre,'marca',DATABASE());
+END;
+//
+DELIMITER ;
+
+
+DELIMITER //
+CREATE TRIGGER auditoria2 AFTER UPDATE ON marca
+FOR EACH ROW
+BEGIN
+INSERT INTO
+bitacora(user ,fecha, tipo , dato, tabla, bd)
+Values(USER() ,NOW(),'UPDATE',OLD.nombre,'marca',DATABASE());
+END;
+//
+DELIMITER ;
+
+
+DELIMITER //
+CREATE TRIGGER auditoria3 AFTER INSERT ON producto
+FOR EACH ROW
+BEGIN
+INSERT INTO
+bitacora(user ,fecha, tipo , dato, tabla, bd)
+Values(USER() ,NOW(),'INSERT',NEW.descripcion,'producto',DATABASE());
+END;
+//
+DELIMITER ;
+
+
+DELIMITER //
+CREATE TRIGGER auditoria4 AFTER DELETE ON producto
+FOR EACH ROW
+BEGIN
+INSERT INTO
+bitacora(user ,fecha, tipo , dato, tabla, bd)
+Values(USER() ,NOW(),'DELETE',OLD.descripcion,'produtco',DATABASE());
+END;
+//
+DELIMITER ;
+
+
+
+DELIMITER //
+CREATE TRIGGER auditoria5 AFTER UPDATE ON producto
+FOR EACH ROW
+BEGIN
+INSERT INTO
+bitacora(user ,fecha, tipo , dato, tabla, bd)
+Values(USER() ,NOW(),'UPDATE',OLD.descripcion,'producto',DATABASE());
+END;
+//
+DELIMITER ;
+
+
+
+DELIMITER //
+CREATE TRIGGER auditoria6 AFTER INSERT ON categoria
+FOR EACH ROW
+BEGIN
+INSERT INTO
+bitacora(user ,fecha, tipo , dato, tabla, bd)
+Values(USER() ,NOW(),'INSERT',NEW.nombre,'categoria',DATABASE());
+END;
+//
+DELIMITER ;
+
+
+DELIMITER //
+CREATE TRIGGER auditoria7 AFTER DELETE ON categoria
+FOR EACH ROW
+BEGIN
+INSERT INTO
+bitacora(user ,fecha, tipo , dato, tabla, bd)
+Values(USER() ,NOW(),'DELETE',OLD.nombre,'categoria',DATABASE());
+END;
+//
+DELIMITER ;
+
+
+
+DELIMITER //
+CREATE TRIGGER auditoria8 AFTER UPDATE ON categoria
+FOR EACH ROW
+BEGIN
+INSERT INTO
+bitacora(user ,fecha, tipo , dato, tabla, bd)
+Values(USER() ,NOW(),'UPDATE',OLD.nombre,'categoria',DATABASE());
+END;
+//
+DELIMITER ;
+
+
+
+
+
+
+
+
+
+DELIMITER //
+DROP TRIGGER STOCK//
+CREATE TRIGGER stock AFTER INSERT ON DETALLE_VENTA
+FOR EACH ROW
+BEGIN
+DECLARE idMAX int;
+DECLARE idProd int;
+DECLARE stock int;
+DECLARE cantidad int;
+DECLARE total int;
+set @idMAX:=(select max(id_detalle) from detalle_venta);
+set @cantidad:=(select cantidad from detalle_venta where id_detalle=@idMAX);
+set @idProd:=(select id_producto from detalle_venta where id_detalle=@idMAX);
+set @stock:=(select existencia from producto where id_producto=@idProd);
+set @total:=@stock-@cantidad;
+UPDATE PRODUCTO SET existencia=@total where id_producto=@idProd;
+END;
+//
+DELIMITER ;

@@ -1,0 +1,40 @@
+create database papeleria;
+
+use papeleria;
+
+
+create table categoria(id_categoria int(5) primary key auto_increment,
+nombre varchar(30))Engine=Innodb;
+
+create table marca(id_marca int(5) primary key auto_increment,
+nombre varchar(30),
+telefono varchar(10),
+contacto varchar(30))Engine=Innodb;
+
+create table producto(id_producto int(5) primary key auto_increment,
+id_categoria int(5),
+descripcion varchar(40),
+existencia int(6),
+costo double(5,2),
+id_marca int(5),
+foreign key (id_categoria) references CATEGORIA(id_categoria) on update cascade,
+foreign key (id_marca) references MARCA(id_marca) on update cascade)Engine=Innodb;
+
+create table Venta(id_venta int(5) primary key auto_increment,
+fecha varchar(20),
+monto double(5,2))Engine=Innodb;
+
+create table detalle_venta(id_detalle int(5) primary key auto_increment,
+id_venta int(5),
+id_producto int(5),
+cantidad int(5),
+foreign key (id_venta) references VENTA(id_venta) on update cascade,
+foreign key (id_producto) references PRODUCTO(id_producto) on update cascade)Engine=Innodb;
+
+CREATE TABLE bitacora(id_bit int PRIMARY KEY AUTO_INCREMENT, 
+user varchar(30),
+fecha varchar(30),
+tipo varchar(30),
+dato varchar(30),
+tabla varchar(30),
+bd varchar(30))Engine=Innodb;

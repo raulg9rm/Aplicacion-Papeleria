@@ -1,0 +1,175 @@
+delimiter //
+DROP procedure sp_agregarmarca//
+create procedure sp_agregarmarca (IN nom varchar(30), tel varchar(10), cont varchar(30))
+begin
+insert into marca values (null, nom, tel, cont);
+end 
+//
+delimiter ;
+
+
+
+delimiter //
+DROP procedure sp_consultarmarca//
+create procedure sp_consultarmarca (IN nom varchar(30))
+BEGIN
+SELECT * FROM marca where nombre=nom;
+END
+//
+
+
+delimiter //
+DROP procedure sp_eliminarmarca//
+create procedure sp_eliminarmarca (IN nom varchar(20))
+BEGIN
+DELETE FROM marca where nombre=nom;
+END
+//
+
+delimiter //
+DROP procedure sp_modificarmarca//
+create procedure sp_modificarmarca (IN telefono varchar(10), id int(5))
+BEGIN
+UPDATE marca SET telefono=nom where id_usuario=id;
+END
+//
+
+delimiter //
+DROP procedure sp_agregarcategoria//
+create procedure sp_agregarcategoria (IN nom varchar(30))
+begin
+insert into categoria values (null, nom);
+end 
+//
+delimiter ;
+
+delimiter //
+DROP procedure sp_agregarproducto//
+create procedure sp_agregarproducto (IN cat varchar(30), des varchar(40), exist int(6), cos double(5,2), marc varchar(30))
+begin
+DECLARE idCat int;
+DECLARE idMarc int;
+set @idCat:=(select id_categoria from categoria where nombre=cat);
+set @idMarc:=(select id_marca from marca where nombre=marc);
+insert into producto values (null, @idCat, des, exist, cos, @idMarc);
+end 
+//
+delimiter ;
+
+
+delimiter //
+DROP procedure sp_consultarproducto//
+create procedure sp_consultarproducto (IN nom varchar(30))
+BEGIN
+SELECT descripcion, existencia, costo FROM producto where descripcion=nom;
+END
+//
+delimiter ;
+
+
+delimiter //
+DROP procedure sp_consultarcatymarca//
+create procedure sp_consultarcatymarca (IN descrip varchar(40))
+BEGIN
+SELECT categoria.nombre, marca.nombre FROM producto INNER JOIN marca on marca.id_marca=producto.id_marca INNER JOIN categoria on categoria.id_categoria=producto.id_categoria where descripcion=descrip;
+END
+//
+delimiter ;
+
+
+delimiter //
+DROP PROCEDURE sp_consultarprecio//
+create procedure sp_consultarprecio (IN nom varchar(40))
+BEGIN
+SELECT COSTO FROM PRODUCTO where descripcion=nom;
+END
+//
+
+
+delimiter //
+DROP procedure sp_agregarventa//
+create procedure sp_agregarventa (IN fech varchar(20), mont double)
+begin
+insert into venta values (null, fech, mont);
+end 
+//
+delimiter ;
+
+
+delimiter //
+DROP procedure sp_consultarcategoria//
+create procedure sp_consultarcategoria ()
+begin
+SELECT * FROM CATEGORIA;
+end 
+//
+delimiter ;
+
+
+
+delimiter //
+DROP procedure sp_eliminarmarca//
+create procedure sp_eliminarmarca (IN nom varchar(20))
+BEGIN
+DELETE FROM marca where nombre=nom;
+END
+//
+
+
+
+
+delimiter //
+DROP procedure sp_consultarultimaventa//
+create procedure sp_consultarultimaventa()
+begin
+DECLARE idMAX int;
+set @idMAX:=(select max(id_venta) from venta);
+SELECT * FROM VENTA WHERE id_venta=@idMAX;
+end 
+//
+delimiter ;
+
+
+delimiter //
+DROP procedure sp_consultaridproducto//
+create procedure sp_consultaridproducto(IN nom varchar(40))
+begin
+SELECT id_producto FROM producto where descripcion=nom;
+end 
+//
+delimiter ;
+
+
+
+
+delimiter //
+DROP procedure sp_agregardetalleventa//
+create procedure sp_agregardetalleventa (IN IDV int, IDP int, cant int)
+begin
+insert into detalle_venta values(null, IDV, IDP, cant);
+end 
+//
+delimiter ;
+
+
+
+delimiter //
+DROP procedure sp_consultarbitacora//
+create procedure sp_consultarbitacora()
+begin
+SELECT * FROM bitacora;
+end 
+//
+delimiter ;
+
+
+delimiter //
+DROP procedure sp_actualizacantidad//
+create procedure sp_actualizacantidad(in pro varchar(100), cant int)
+begin
+set @can=(select existencia from producto where descripcion=pro);
+set @nue=@can-cant;
+update producto set existencia=@nue where descripcion=pro;
+end 
+//
+delimiter ;
